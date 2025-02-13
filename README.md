@@ -89,5 +89,3 @@ TailwindCSS jest skonfigurowany za pomocą @astrojs/tailwind oraz pluginu @tailw
 * Dodanie systemu komentarzy.
 * Integracja z CMS (np. Sanity, Contentful).
 
-## 📄 Licencja
-Projekt jest dostępny na licencji MIT.
