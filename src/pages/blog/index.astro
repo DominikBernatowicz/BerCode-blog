@@ -1,0 +1,133 @@
+---
+import { getCollection } from "astro:content";
+import { Card } from "../../components/Card";
+import { getPostColorFromCategory } from "../../utils/postUtils";
+import { CutCornerButton } from "../../components/CutCornerButton";
+import { Tag } from "../../components/Tag";
+import { twMerge } from "tailwind-merge";
+import { motion } from "framer-motion";
+import InteriorHero from "../../components/InteriorHero.astro";
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const latestPost = posts[0];
+---
+
+<DefaultLayout>
+	<InteriorHero>
+		<div class="max-w-3xl mx-auto">
+			<p
+				class="uppercase font-extrabold text-center text-zinc-500 tracking-wider"
+			>
+				Najnowszy wpis
+			</p>
+
+			<h1
+				class="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-center mt-4 max-w-3xl mx-auto"
+			>
+				{latestPost.data.title}
+			</h1>
+
+			<p
+				class="text-center text-xl md:text-2xl mt-6 text-zinc-400 max-w-60 md:max-w-md mx-auto"
+			>
+				{latestPost.data.description}
+			</p>
+
+			<div class="flex justify-center mt-10">
+				<a href={`/blog/${latestPost.slug}`}>
+					<CutCornerButton client:load> Przeczytaj wpis </CutCornerButton>
+				</a>
+			</div>
+		</div>
+	</InteriorHero>
+
+	<section class="py-32 bg-zinc-900/50 backdrop-blur-sm">
+		<div class="container">
+			<div class="grid md:grid-cols-2 grid-cols-1 gap-8">
+				<div class="flex flex-col gap-8 lg:gap-12">
+					{
+						posts.map(
+							(
+								{ id, data: { title, description, category }, slug },
+								postIndex,
+							) => {
+								const color = getPostColorFromCategory(category);
+								return (
+									<motion.a
+										key={id}
+										client:load
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true, amount: 0.5 }}
+										transition={{
+											duration: 0.5,
+											ease: "easeIn",
+										}}
+										href={`/blog/${slug}`}
+										className={twMerge(postIndex % 2 && "md:hidden")}
+									>
+										<Card color={color}>
+											<div>
+												<Tag color={color}>{category}</Tag>
+
+												<h3 class="font-heading font-black text-2xl md:text-3xl mt-3">
+													{title}
+												</h3>
+
+												<p class="text-lg text-zinc-400 mt-6">{description}</p>
+											</div>
+										</Card>
+									</motion.a>
+								);
+							},
+						)
+					}
+				</div>
+
+				<div class="md:flex flex-col gap-8 lg:gap-12 mt-24 hidden">
+					{
+						posts.map(
+							(
+								{ id, data: { title, description, category }, slug },
+								postIndex,
+							) => {
+								const color = getPostColorFromCategory(category);
+								return (
+									<motion.a
+										key={id}
+										client:load
+										initial={{ opacity: 0, y: 20 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true, amount: 0.5 }}
+										transition={{
+											duration: 0.5,
+											ease: "easeIn",
+										}}
+										href={`/blog/${slug}`}
+										className={twMerge(!(postIndex % 2) && "md:hidden")}
+									>
+										<Card color={color}>
+											<div>
+												<Tag color={color}>{category}</Tag>
+
+												<h3 class="font-heading font-black text-3xl mt-3">
+													{title}
+												</h3>
+
+												<p class="text-lg text-zinc-400 mt-6">{description}</p>
+											</div>
+										</Card>
+									</motion.a>
+								);
+							},
+						)
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+</DefaultLayout>

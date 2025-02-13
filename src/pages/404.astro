@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import { CutCornerButton } from "../components/CutCornerButton";
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import { LeatestPostsSection } from "../sections/home/LeatestPosts";
+import InteriorHero from "../components/InteriorHero.astro";
+
+const posts = await getCollection("blog");
+
+const latestPosts = posts
+    .sort((a, b) => {
+        if (a.data.pubDate.valueOf() === b.data.pubDate.valueOf()) return 0;
+        return a.data.pubDate.valueOf() > b.data.pubDate.valueOf() ? -1 : 1;
+    })
+    .slice(0, 4);
+---
+
+<DefaultLayout>
+    <InteriorHero>
+        <div class="max-w-3xl mx-auto py-20 md:py-[70px]">
+            <h1
+                class="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-center max-w-3xl mx-auto lg:pt-10"
+            >
+                Niestety strona nie została odnaleziona.
+            </h1>
+
+            <p
+                class="text-center text-xl md:text-2xl mt-6 text-zinc-400 max-w-60 md:max-w-md mx-auto"
+            >
+                Jeżeli uważasz że powinienem ją dodać to zapraszamy do kontaktu.
+            </p>
+
+            <div class="flex justify-center mt-10 mb-16">
+                <a href="/contact">
+                    <CutCornerButton client:load> Kontakt </CutCornerButton>
+                </a>
+            </div>
+        </div>
+    </InteriorHero>
+
+    <LeatestPostsSection latestPosts={latestPosts} client:load />
+</DefaultLayout>

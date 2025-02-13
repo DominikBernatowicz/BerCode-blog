@@ -1,0 +1,94 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import InteriorHero from "../../components/InteriorHero.astro";
+import { Tag } from "../../components/Tag";
+import { getPostColorFromCategory } from "../../utils/postUtils";
+import InteriorContent from "../../components/InteriorContent.astro";
+import { AvatarLogo } from "../../components/AvatarLogo";
+import { LeatestPostsSection } from "../../sections/home/LeatestPosts";
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import { twMerge } from "tailwind-merge";
+
+const posts = await getCollection("blog");
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<"blog">;
+
+const post = Astro.props;
+const {
+	data: {
+		category,
+		title,
+		description,
+		author: { name, title: autorTitle, image },
+	},
+} = post;
+const { Content } = await post.render();
+
+const latestPosts = posts
+	.sort((a, b) => {
+		if (a.data.pubDate.valueOf() === b.data.pubDate.valueOf()) return 0;
+		return a.data.pubDate.valueOf() > b.data.pubDate.valueOf() ? -1 : 1;
+	})
+	.slice(0, 4);
+---
+
+<DefaultLayout>
+	<InteriorHero>
+		<div class="max-w-3xl mx-auto -mb-[56px]">
+			<div class="flex justify-center">
+				<Tag color={getPostColorFromCategory(category)}>{category}</Tag>
+			</div>
+
+			<h1
+				class="font-heading font-black text-3xl md:text-5xl lg:text-6xl text-center mt-4 max-w-md md:max-w-lg lg:max-w-3xl mx-auto"
+			>
+				{title}
+			</h1>
+
+			<p
+				class="text-sm md:text-md lg:text-xl text-center mt-8 text-zinc-400 max-w-80 md:max-w-md lg:max-w-2xl mx-auto"
+			>
+				{description}
+			</p>
+
+			<div class="flex flex-col items-center mt-8">
+				<AvatarLogo
+					src={image}
+					name={name}
+					color={getPostColorFromCategory(category)}
+					client:load
+				/>
+				<div class="font-extrabold text-sm md:text-md lg:text-lg mt-3">
+					{name}
+				</div>
+				<div class="text-sm md:text-md lg:text-lg text-zinc-400">
+					{autorTitle}
+				</div>
+			</div>
+		</div>
+	</InteriorHero>
+
+	<InteriorContent>
+		<div
+			class={twMerge(
+				"mx-auto pt-32",
+				"prose prose-invert prose-lg prose-zinc",
+				"prose-headings:font-heading prose-headings:font-black",
+				"prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:lg:text-4xl",
+				"prose-h3:text-1xl prose-h3:md:text-2xl prose-h3:lg:text-3xl",
+				"prose-pre:bg-zinc-900 prose-pre:text-white prose-pre:rounded-xl prose-pre:p-5 prose-pre:border-2 prose-pre:border-zinc-700"
+			)}
+		>
+			<Content />
+		</div>
+	</InteriorContent>
+
+	<LeatestPostsSection latestPosts={latestPosts} client:load />
+</DefaultLayout>
