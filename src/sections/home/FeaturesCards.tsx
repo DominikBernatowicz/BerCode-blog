@@ -79,6 +79,7 @@ export const FeaturesCardsSection = () => {
                                     key={title}
                                     color={color}
                                     buttonText="Sprawdź"
+                                    href="/blog"
                                 >
                                     <div className="flex justify-center -mt-28">
                                         <div className="inline-flex relative">

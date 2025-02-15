@@ -45,6 +45,7 @@ export const LeatestPostsSection = (props: { latestPosts: CollectionEntry<"blog"
                                         key={postIndex}
                                         color={color}
                                         className={twMerge(postIndex % 2 && "md:hidden")}
+                                        href={`/blog/${latestPosts[postIndex].slug}`}
                                     >
                                         <div>
                                             <Tag color={color}>
@@ -79,6 +80,7 @@ export const LeatestPostsSection = (props: { latestPosts: CollectionEntry<"blog"
                                     key={postIndex}
                                     color={color}
                                     className={twMerge(!(postIndex % 2) && "md:hidden")}
+                                    href={`/blog/${latestPosts[postIndex].slug}`}
                                 >
                                     <div>
                                         <Tag color={color}>

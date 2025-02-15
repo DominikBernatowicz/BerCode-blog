@@ -44,8 +44,8 @@ export const Footer = () => {
 
                     <nav className="hidden md:flex text-zinc-500 font-heading font-black gap-12">
                         <a href="#">Home</a>
-                        <a href="#">Blog</a>
-                        <a href="#">Contact</a>
+                        <a href="/blog">Blog</a>
+                        <a href="/contact">Contact</a>
                     </nav>
                 </div>
 

@@ -3,8 +3,8 @@ import { TextButton } from "./TextButton";
 import type { ComponentPropsWithoutRef } from "react";
 import { findBgColor, findTextColor, type ColorType } from "../utils/colorsUtils";
 
-export const Card = (props: ComponentPropsWithoutRef<"div"> & { color: ColorType, buttonText?: string }) => {
-    const { children, className, color, buttonText = 'Czytaj dalej' } = props;
+export const Card = (props: ComponentPropsWithoutRef<"div"> & { color: ColorType, href: string, buttonText?: string }) => {
+    const { children, className, color, href, buttonText = 'Czytaj dalej' } = props;
 
     return (
         <div className={twMerge(
@@ -28,6 +28,7 @@ export const Card = (props: ComponentPropsWithoutRef<"div"> & { color: ColorType
                 <TextButton
                     color={color}
                     withHoverGroup={true}
+                    href={href}
                 >
                     {buttonText}
                 </TextButton>
